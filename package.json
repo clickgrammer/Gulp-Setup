@@ -1,0 +1,32 @@
+{
+  "name": "gulp-setup",
+  "version": "1.0.0",
+  "description": "Gulp setup for psd to html with UiKit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MateuszRaubo/gulp-setup.git"
+  },
+  "keywords": [
+    "gulp",
+    "psd",
+    "to",
+    "html",
+    "uikit",
+    "ejs",
+    "scss",
+    "browsersync"
+  ],
+  "author": "Mateusz Raubo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MateuszRaubo/gulp-setup/issues"
+  },
+  "homepage": "https://github.com/MateuszRaubo/gulp-setup#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
