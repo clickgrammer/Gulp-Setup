@@ -2,6 +2,8 @@
 # Misc
 package-lock.json
 yarn.lock
+# If you want to keep the Jetbrains configuration, delete the line below
+.idea
 
 # Created by https://www.gitignore.io/api/node,jetbrains,visualstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,jetbrains,visualstudio,visualstudiocode

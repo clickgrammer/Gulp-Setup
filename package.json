@@ -18,7 +18,8 @@
     "uikit",
     "ejs",
     "scss",
-    "browsersync"
+    "browsersync",
+    "rem to px"
   ],
   "author": "Mateusz Raubo",
   "license": "MIT",
