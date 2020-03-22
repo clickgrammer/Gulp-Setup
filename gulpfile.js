@@ -1,8 +1,15 @@
-// File structure config
+// File names config
 const files = {
   ejs: '**/*.ejs',
+  scss: 'style.scss',
+  css: 'style.css',
+  js: {
+    in: 'app.js',
+    out: 'app.min.js',
+  },
   resources: '**/*.*',
 };
+// Directory structure config
 const main = {
   in: 'src/',
   out: 'dist/'
@@ -12,14 +19,23 @@ const paths = {
     in: main.in + 'html/pages/',
     out: main.out,
   },
+  scss: {
+    in: main.in + 'scss/',
+    out: main.out +'css/',
+  },
+  js: {
+    in: main.in + 'js/',
+    out: main.out + 'js/',
+  },
   resources: {
-    in: 'src/resources/',
-    out: 'dist/resources/',
+    in: main.in + 'resources/',
+    out: main.out + 'resources/',
   },
 };
 // Dependencies
 const { dest, parallel, src, series, watch } = require('gulp');
 const argv = require('yargs').argv;
+const browser = require('browser-sync');
 const del = require('del');
 const ejs = require('gulp-ejs');
 const log = require('fancy-log');
@@ -41,8 +57,20 @@ function ejsCompile() {
   .pipe(ejs({}).on('error', log))
   .pipe(rename({ extname: '.html' }))
   .pipe(strip()) // removes comments
-  .pipe(dest(paths.html.out));
-  // TODO: add browsersync stream
+  .pipe(dest(paths.html.out))
+  .pipe(browser.stream());
+}
+// ------------------------------
+// SCSS
+// ------------------------------
+function scss(cb) {
+  cb();
+}
+// ------------------------------
+// JS
+// ------------------------------
+function js(cb) {
+  cb();
 }
 // ------------------------------
 // Resources
@@ -51,7 +79,27 @@ function resources() {
   return src(paths.resources.in + files.resources)
   .pipe(plumber())
   .pipe(dest(paths.resources.out))
-  // TODO: add browsersync stream
+  .pipe(browser.stream());
+}
+// ------------------------------
+// Browser Sync
+// ------------------------------
+function browserSync(cb) {
+  if (!isProd) {
+    return browser({
+      server: {
+        baseDir: main.out,
+      },
+      port: 3000,
+    });
+  }
+  cb();
+}
+function browserReload(cb) {
+  if (!isProd) {
+    browser.reload();
+  }
+  cb();
 }
 // ------------------------------
 // Watch
@@ -59,6 +107,8 @@ function resources() {
 function watcher(cb) {
   if (!isProd) {
     watch(main.in + 'html', ejsCompile);
+    watch(paths.scss.in, scss);
+    watch(paths.js.in, series(js, browserReload));
     watch(paths.resources.in, resources);
   }
   cb();
@@ -75,5 +125,8 @@ function clean() {
 // ------------------------------
 exports.clean = clean;
 exports.html = ejsCompile;
+exports.css = scss;
+exports.js = js;
 exports.resources = resources;
-exports.watcher = watcher;
+exports.watch = watcher;
+exports.default = series(parallel(ejsCompile, scss, js, resources), parallel(browserSync, watcher));
