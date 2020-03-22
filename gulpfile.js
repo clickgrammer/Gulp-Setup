@@ -5,7 +5,7 @@ const files = {
 };
 const main = {
   in: 'src/',
-  out: 'dist'
+  out: 'dist/'
 };
 const paths = {
   html: {
@@ -19,11 +19,16 @@ const paths = {
 };
 // Dependencies
 const { dest, parallel, src, series, watch } = require('gulp');
+const argv = require('yargs').argv;
+const del = require('del');
 const ejs = require('gulp-ejs');
 const log = require('fancy-log');
 const plumber = require('gulp-plumber');
 const rename = require('gulp-rename');
 const strip = require('gulp-strip-comments'); // remove comments
+
+// Environment
+const isProd = (typeof (argv.env) === 'undefined' || argv.env !== 'development');
 // ------------------------------
 // Tasks
 // ------------------------------
@@ -49,7 +54,26 @@ function resources() {
   // TODO: add browsersync stream
 }
 // ------------------------------
+// Watch
+// ------------------------------
+function watcher(cb) {
+  if (!isProd) {
+    watch(main.in + 'html', ejsCompile);
+    watch(paths.resources.in, resources);
+  }
+  cb();
+}
+// ------------------------------
+// Clean
+// ------------------------------
+function clean() {
+  // deletes files from dist but not dir itself
+  return del([main.out + '**', '!' + main.in]);
+}
+// ------------------------------
 // Tasks exports
 // ------------------------------
+exports.clean = clean;
 exports.html = ejsCompile;
 exports.resources = resources;
+exports.watcher = watcher;
