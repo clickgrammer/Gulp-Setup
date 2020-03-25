@@ -36,11 +36,15 @@ const paths = {
 const { dest, parallel, src, series, watch } = require('gulp');
 const argv = require('yargs').argv;
 const browser = require('browser-sync');
+const commonjs = require('rollup-plugin-commonjs');
 const del = require('del');
 const ejs = require('gulp-ejs');
+const { eslint } = require('rollup-plugin-eslint');
 const log = require('fancy-log');
 const plumber = require('gulp-plumber');
 const rename = require('gulp-rename');
+const resolve = require('rollup-plugin-node-resolve');
+const rollup = require('rollup');
 const strip = require('gulp-strip-comments'); // remove comments
 
 // Environment
@@ -67,10 +71,24 @@ function scss(cb) {
   cb();
 }
 // ------------------------------
-// JS
+// JavaScript
 // ------------------------------
-function js(cb) {
-  cb();
+function js() {
+  return rollup.rollup({
+    input: paths.js.in + files.js.in,
+    plugins: [
+      eslint({
+        exclude: 'node_modules/**',
+      }),
+      commonjs(),
+      resolve(),
+    ],
+  })
+  .then((bundle) => bundle.write({
+    file: paths.js.out + files.js.in,
+    format: 'iife',
+    sourcemap: true,
+  }));
 }
 // ------------------------------
 // Resources
