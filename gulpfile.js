@@ -35,16 +35,22 @@ const paths = {
 // Dependencies
 const { dest, parallel, src, series, watch } = require('gulp');
 const argv = require('yargs').argv;
+const babel = require('rollup-plugin-babel');
 const browser = require('browser-sync');
+const commonjs = require('rollup-plugin-commonjs');
 const del = require('del');
 const ejs = require('gulp-ejs');
+const { eslint } = require('rollup-plugin-eslint');
 const log = require('fancy-log');
 const plumber = require('gulp-plumber');
 const rename = require('gulp-rename');
+const resolve = require('rollup-plugin-node-resolve');
+const rollup = require('rollup');
 const strip = require('gulp-strip-comments'); // remove comments
+const { terser } = require('rollup-plugin-terser');
 
 // Environment
-const isProd = (typeof (argv.env) === 'undefined' || argv.env !== 'development');
+const IS_PROD = (typeof (argv.env) === 'undefined' || argv.env !== 'development');
 // ------------------------------
 // Tasks
 // ------------------------------
@@ -67,10 +73,44 @@ function scss(cb) {
   cb();
 }
 // ------------------------------
-// JS
+// JavaScript
 // ------------------------------
-function js(cb) {
-  cb();
+function js() {
+  if (IS_PROD) {
+    rollup.rollup({
+      input: paths.js.in + files.js.in,
+      plugins: [
+        eslint({
+          exclude: 'node_modules/**',
+        }),
+        commonjs(),
+        resolve(),
+        babel({
+          exclude: 'node_modules/**',
+        }),
+        terser(),
+      ],
+    })
+    .then((bundle) => bundle.write({
+      file: paths.js.out + files.js.out,
+      format: 'iife',
+    }));
+  }
+  return rollup.rollup({
+    input: paths.js.in + files.js.in,
+    plugins: [
+      eslint({
+        exclude: 'node_modules/**',
+      }),
+      commonjs(),
+      resolve(),
+    ],
+  })
+  .then((bundle) => bundle.write({
+    file: paths.js.out + files.js.in,
+    format: 'iife',
+    sourcemap: true,
+  }));
 }
 // ------------------------------
 // Resources
@@ -85,7 +125,7 @@ function resources() {
 // Browser Sync
 // ------------------------------
 function browserSync(cb) {
-  if (!isProd) {
+  if (!IS_PROD) {
     return browser({
       server: {
         baseDir: main.out,
@@ -96,7 +136,7 @@ function browserSync(cb) {
   cb();
 }
 function browserReload(cb) {
-  if (!isProd) {
+  if (!IS_PROD) {
     browser.reload();
   }
   cb();
@@ -105,7 +145,7 @@ function browserReload(cb) {
 // Watch
 // ------------------------------
 function watcher(cb) {
-  if (!isProd) {
+  if (!IS_PROD) {
     watch(main.in + 'html', ejsCompile);
     watch(paths.scss.in, scss);
     watch(paths.js.in, series(js, browserReload));

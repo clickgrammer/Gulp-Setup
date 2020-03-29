@@ -1,0 +1,29 @@
+{
+  "parserOptions":{
+    "ecmaVersion":2018,
+    "ecmaFeatures":{
+      "jsx":true
+    },
+    "sourceType":"module"
+  },
+  "env":{
+    "es6":true,
+    "node":true
+  },
+  "extends": "eslint-config-airbnb-base",
+  "plugins":[
+    "import",
+    "node",
+    "promise",
+    "standard"
+  ],
+  "globals":{
+    "document":false,
+    "navigator":false,
+    "window":false,
+    "localStorage": false,
+    "console": false
+  },
+  "rules":{
+  }
+}
