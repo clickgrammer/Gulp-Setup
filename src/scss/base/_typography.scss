@@ -1,0 +1,9 @@
+// ------------------------------------------------------------
+// @include font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg);
+// Use only woff2, woff formats, both are required and supported by all browsers
+// if you need more add them in helpers/mixins// Example:
+// @include font-face('Open Sans', $open-sans-dir+'OpenSans-Regular', 400, normal, woff woff2);
+// ------------------------------------------------------------
+// Default fonts directory
+$fonts-root: '../assets/fonts/';
+$font-dir: $fonts-root+'font-dir/'

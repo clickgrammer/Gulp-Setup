@@ -1,0 +1,112 @@
+// Font Face (https://gist.github.com/jonathantneal/d0460e5c2d5d7f9bc5e6)
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+
+  $extmods: (
+    eot: "?",
+    svg: "#" + str-replace($name, " ", "_")
+  );
+
+  $formats: (
+    otf: "opentype",
+    ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    src: $src;
+  }
+}
+
+// Media queries
+@mixin media-max($breakpoint) {
+  @media (max-width: #{$breakpoint - 0.02px}) {
+    @content;
+  }
+}
+
+@mixin media-min($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin media-min-max($breakpoint-min,
+$breakpoint-max) {
+  @media (min-width: $breakpoint-min) and (max-width: #{$breakpoint-max - 0.02px}) {
+    @content;
+  }
+}
+
+// SVG Color
+@mixin svg-color($color) {
+  fill: $color;
+  color: $color;
+}
+
+// Reses list styles
+@mixin list-clear() {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Reset input styles
+@mixin input-clear() {
+  outline: none;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+  appearance: none;
+}
+
+// Position absolute
+@mixin absolute-center() {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin absolute-middle() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin absolute-center-middle() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-fullsize() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Hover, Active, Focus ->  @include hover { };
+@mixin hover {
+  &:hover, &:active, &:focus {
+    @content;
+  }
+}
+//Headings use eq. -> @include headings { };
+@mixin headings {
+  h1, h2, h3, h4, h5, h6 {
+    @content;
+  }
+}
