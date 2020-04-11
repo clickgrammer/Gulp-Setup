@@ -16,7 +16,7 @@
       href="resources/images/icons/favicon.png"/>
 <!--    TODO: in production should compile .min.css-->
 <link rel="stylesheet"
-      href="css/style.css">
+      href="css/style<%=(env === 'development') ? '.min' : ''%>.css">
 <!-- remove edge default styles for phone number-->
 <meta name="format-detection"
       content="telephone=no">

@@ -60,7 +60,7 @@ const IS_PROD = (typeof (argv.env) === 'undefined' || argv.env !== 'development'
 function ejsCompile() {
   return src(paths.html.in + files.ejs)
   .pipe(plumber())
-  .pipe(ejs({}).on('error', log))
+  .pipe(ejs({...argv}).on('error', log))
   .pipe(rename({ extname: '.html' }))
   .pipe(strip()) // removes comments
   .pipe(dest(paths.html.out))
