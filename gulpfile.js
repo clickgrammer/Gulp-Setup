@@ -1,3 +1,11 @@
+// Settings
+const autoPrefixerSettings = {
+  grid: true,
+  overrideBrowserslist: [
+    '> 0.5%',
+  ],
+  remove: false,
+};
 // File names config
 const files = {
   ejs: '**/*.ejs',
@@ -34,6 +42,7 @@ const paths = {
 };
 // Dependencies
 const { dest, parallel, src, series, watch } = require('gulp');
+const autoprefixer = require('gulp-autoprefixer');
 const argv = require('yargs').argv;
 const babel = require('rollup-plugin-babel');
 const browser = require('browser-sync');
@@ -45,6 +54,8 @@ const log = require('fancy-log');
 const plumber = require('gulp-plumber');
 const rename = require('gulp-rename');
 const resolve = require('rollup-plugin-node-resolve');
+const sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
 const rollup = require('rollup');
 const strip = require('gulp-strip-comments'); // remove comments
 const { terser } = require('rollup-plugin-terser');
@@ -69,8 +80,27 @@ function ejsCompile() {
 // ------------------------------
 // SCSS
 // ------------------------------
-function scss(cb) {
-  cb();
+function scss() {
+  if (IS_PROD) {
+    src(paths.scss.in + files.scss)
+    .pipe(plumber())
+    .pipe(sass({
+      outputStyle: 'compressed',
+    }))
+    .pipe(autoprefixer(autoPrefixerSettings))
+    .pipe(rename({
+      suffix: '.min',
+    }))
+    .pipe(dest(paths.scss.out))
+    .pipe(browser.stream());
+  }
+  return src(paths.scss.in + files.scss)
+  .pipe(sourcemaps.init())
+  .pipe(plumber())
+  .pipe(sass())
+  .pipe(sourcemaps.write('.'))
+  .pipe(dest(paths.scss.out))
+  .pipe(browser.stream());
 }
 // ------------------------------
 // JavaScript
