@@ -1,0 +1,28 @@
+* {
+  /*Webkit*/
+  /* width */
+  &::-webkit-scrollbar {
+    transition: $t-bc;
+    will-change: background-color;
+    width: rem(7px);
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background-color: lightgrey;
+    border-radius: rem(7px);
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background-color: grey;
+    border-radius: rem(7px);
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: dimgrey;
+  }
+  /*Mozilla*/
+  /* Handle Track */
+  scrollbar-color: gray darkgray;
+  /* width */
+  scrollbar-width: thin;
+}

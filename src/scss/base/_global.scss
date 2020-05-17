@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+  &::before, &::after {
+    @extend *;
+    speak: none;
+  }
+}
+html {
+  margin: 0;
+  padding: 0;
+  font-size: 3.8333vw;
+  font-family: $font-family;
+  font-weight: 400;
+  background-color: #fff;
+  color: #000;
+  //horizontal phone
+  @include media-min(450px) {
+    font-size: 2.8vw;
+  }
+  @include media-min($sm) {
+    font-size: 2.2vw;
+  }
+  @include media-min($md) {
+    font-size: 1.4vw;
+  }
+  @include media-min($lg) {
+    font-size: .833334vw;
+  }
+  // iPad Pro
+  //@media (min-width: $lg) and (min-resolution: 140dpi) {
+  //  font-size: 1.4vw;
+  //}
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex-grow: 1;
+}
+a {
+  color: inherit;
+  transition: $t-color;
+  will-change: color;
+  @include hover {
+    color: $link;
+    text-decoration: none;
+  }
+}
+b,
+strong
+{
+  font-weight: 700;
+}
+em {
+  color: inherit;
+}
+// Set inherited font family
+input,
+button,
+textarea,
+select,
+option {
+  font-family: inherit;
+  // Set min font size for mobile devices
+  //&:not(button) {
+  //  @include media-max($md) {
+  //    @include rfs(1rem, true);
+  //  }
+  //}
+  &::placeholder {
+    color: inherit;
+  }
+}
+button,
+select,
+input[type="submit"] {
+  color: inherit;
+  cursor: pointer;
+  @include hover {
+    cursor: pointer;
+  }
+}
+textarea {
+  overflow: auto;
+}
+[type=checkbox] {
+  cursor: pointer;
+}
+@include headings {
+  font-family: inherit;
+  color: inherit;
+}
+img {
+  max-height: inherit;
+  &[uk-svg] {
+    display: none;
+  }
+  // Prevents img without src to appear
+  &:not([src]) {
+    visibility: hidden;
+  }
+  //MS Edge fix for lazyload
+  &[data-src],
+  &[data-srcset] {
+    display: block;
+    min-height: 1px;
+  }
+}
+svg {
+  @include svg-color(inherit);
+  max-width: inherit;
+  max-height: inherit;
+}
+:not(pre) > code, :not(pre) > em, :not(pre) > kbd, :not(pre) > samp {
+  color: #000000;
+}
