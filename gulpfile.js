@@ -24,7 +24,7 @@ const main = {
 };
 const paths = {
   html: {
-    in: main.in + 'html/pages/',
+    in: main.in + 'html/views/',
     out: main.out,
   },
   scss: {
